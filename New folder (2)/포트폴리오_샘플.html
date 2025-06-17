@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>웹사이트 제작 서비스 - 포트폴리오</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .cta-button {
+            background: #FF6B35;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .cta-button:hover {
+            background: #E55A2B;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            color: #333;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .portfolio-item {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .portfolio-preview {
+            height: 250px;
+            background: linear-gradient(45deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            position: relative;
+        }
+
+        .portfolio-preview.test {
+            background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .portfolio-preview.business {
+            background: linear-gradient(45deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        .portfolio-preview.event {
+            background: linear-gradient(45deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .portfolio-info {
+            padding: 30px;
+        }
+
+        .portfolio-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .portfolio-info p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .portfolio-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: #f0f0f0;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .features {
+            background: #f8f9fa;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .feature {
+            text-align: center;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: #FF6B35;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 20px;
+        }
+
+        .pricing {
+            background: white;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            border-color: #FF6B35;
+            transform: translateY(-5px);
+        }
+
+        .pricing-card.featured {
+            border-color: #FF6B35;
+            transform: scale(1.05);
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #FF6B35;
+            margin: 20px 0;
+        }
+
+        .contact {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .contact-item {
+            text-align: center;
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .section h2 {
+                font-size: 2rem;
+            }
+            
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>🌟 맞춤형 웹사이트 제작</h1>
+        <p>당신만의 특별한 웹사이트를 1-3일 만에 완성해드립니다</p>
+        <a href="#contact" class="cta-button">지금 시작하기</a>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section class="section">
+        <div class="container">
+            <h2>포트폴리오</h2>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <div class="portfolio-preview">
+                        🧡
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>POOMANG 유형 테스트</h3>
+                        <p>24문항으로 구성된 개인 성향 분석 테스트 사이트. 발열형, 분노형, 냉정형으로 결과를 분류합니다.</p>
+                        <div class="portfolio-tags">
+                            <span class="tag">유형테스트</span>
+                            <span class="tag">모바일최적화</span>
+                            <span class="tag">인터랙티브</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item">
+                    <div class="portfolio-preview business">
+                        ☕
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>카페 소개 페이지</h3>
+                        <p>모던하고 감성적인 카페 홍보 웹사이트. 메뉴, 위치, 분위기를 한눈에 보여주는 디자인입니다.</p>
+                        <div class="portfolio-tags">
+                            <span class="tag">비즈니스</span>
+                            <span class="tag">반응형</span>
+                            <span class="tag">지도연동</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item">
+                    <div class="portfolio-preview event">
+                        💕
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>결혼식 초대장</h3>
+                        <p>로맨틱하고 우아한 온라인 결혼식 초대장. 사진 갤러리와 참석 의사 확인 기능 포함.</p>
+                        <div class="portfolio-tags">
+                            <span class="tag">이벤트</span>
+                            <span class="tag">갤러리</span>
+                            <span class="tag">RSVP</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="portfolio-item">
+                    <div class="portfolio-preview test">
+                        👤
+                    </div>
+                    <div class="portfolio-info">
+                        <h3>개인 포트폴리오</h3>
+                        <p>깔끔하고 전문적인 개인 이력서 겸 포트폴리오 사이트. 경력과 프로젝트를 효과적으로 어필합니다.</p>
+                        <div class="portfolio-tags">
+                            <span class="tag">포트폴리오</span>
+                            <span class="tag">이력서</span>
+                            <span class="tag">SEO최적화</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section features">
+        <div class="container">
+            <h2>서비스 특징</h2>
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>빠른 제작</h3>
+                    <p>1-3일 내 완성<br>신속한 작업 진행</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <h3>모바일 최적화</h3>
+                    <p>모든 기기에서<br>완벽한 호환성</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌐</div>
+                    <h3>무료 호스팅</h3>
+                    <p>1년 이상 보장<br>안정적인 서비스</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎨</div>
+                    <h3>맞춤 디자인</h3>
+                    <p>100% 커스터마이징<br>유일한 디자인</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section pricing">
+        <div class="container">
+            <h2>가격표</h2>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>기본형</h3>
+                    <div class="price">15만원</div>
+                    <ul style="text-align: left; list-style: none; padding: 0;">
+                        <li>✅ 1페이지 랜딩</li>
+                        <li>✅ 모바일 최적화</li>
+                        <li>✅ 무료 호스팅</li>
+                        <li>✅ 1개월 A/S</li>
+                    </ul>
+                </div>
+                <div class="pricing-card featured">
+                    <h3>표준형</h3>
+                    <div class="price">25만원</div>
+                    <ul style="text-align: left; list-style: none; padding: 0;">
+                        <li>✅ 3-5페이지</li>
+                        <li>✅ 인터랙티브 기능</li>
+                        <li>✅ SEO 최적화</li>
+                        <li>✅ 소셜 공유</li>
+                        <li>✅ 1개월 A/S</li>
+                    </ul>
+                </div>
+                <div class="pricing-card">
+                    <h3>테스트형</h3>
+                    <div class="price">30만원</div>
+                    <ul style="text-align: left; list-style: none; padding: 0;">
+                        <li>✅ 유형 테스트</li>
+                        <li>✅ 결과 분석</li>
+                        <li>✅ 공유 기능</li>
+                        <li>✅ 통계 기능</li>
+                        <li>✅ 1개월 A/S</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact" id="contact">
+        <div class="container">
+            <h2>문의하기</h2>
+            <p>당신만의 특별한 웹사이트를 만들어보세요!</p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-icon">💬</div>
+                    <h3>카카오톡</h3>
+                    <p>ID: [카카오톡 ID]</p>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">📧</div>
+                    <h3>이메일</h3>
+                    <p>[이메일 주소]</p>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">📱</div>
+                    <h3>전화</h3>
+                    <p>[전화번호]</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 40px;">
+                <a href="#" class="cta-button">지금 상담받기</a>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 부드러운 스크롤
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 스크롤 애니메이션
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // 관찰할 요소들 설정
+        document.querySelectorAll('.portfolio-item, .feature, .pricing-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html> 
