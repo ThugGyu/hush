@@ -1,302 +1,591 @@
 <!DOCTYPE html>
-<html lang="ko" class="scroll-smooth">
+<html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>경상국립대학교 축구동아리</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    html {
-      scroll-behavior: smooth;
-    }
-    body {
-      background: #2d1a2d;
-      font-family: 'Pretendard', 'Noto Sans KR', 'Apple SD Gothic Neo', Arial, sans-serif;
-      transition: background 0.5s;
-    }
-    /* 별 배경용 캔버스 */
-    #star-bg {
-      position: fixed;
-      left: 0; top: 0; width: 100vw; height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-      display: block;
-    }
-    /* 스크롤바 커스텀 */
-    ::-webkit-scrollbar { width: 10px; }
-    ::-webkit-scrollbar-thumb { background: #3a223a; border-radius: 8px; }
-    ::-webkit-scrollbar-track { background: #2d1a2d; }
-    /* 헤더 축소 효과 */
-    .nav-shrink { padding-top: 0.25rem !important; padding-bottom: 0.25rem !important; }
-    .main-glow-title {
-      text-shadow:
-        0 0 16px #fff,
-        0 0 32px #ffd700cc,
-        0 0 48px #ffd70099,
-        0 0 80px #fff8,
-        0 2px 8px #000a;
-      filter: drop-shadow(0 0 12px #fff8);
-    }
-    @media (min-width: 768px) {
-      .main-glow-title {
-        font-size: 5rem !important;
-      }
-    }
-    @media (min-width: 1024px) {
-      .main-glow-title {
-        font-size: 6rem !important;
-      }
-    }
-    @keyframes glow {
-      0%, 100% { text-shadow:
-        0 0 16px #fff,
-        0 0 32px #ffd700cc,
-        0 0 48px #ffd70099,
-        0 0 80px #fff8,
-        0 2px 8px #000a; }
-      50% { text-shadow:
-        0 0 32px #fff,
-        0 0 64px #ffd700,
-        0 0 96px #ffd70099,
-        0 0 120px #fff8,
-        0 2px 16px #000a; }
-    }
-    .animate-glow {
-      animation: glow 2.5s ease-in-out infinite alternate;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POOMANG - 나의 유형 테스트</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .page {
+            display: none;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            color: #FF6B35;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .illustration {
+            width: 120px;
+            height: 120px;
+            margin: 20px auto;
+            background: linear-gradient(45deg, #FF6B35, #F7931E);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: white;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .tag {
+            background: #f0f0f0;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #FF6B35;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #E55A2B;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .question-container {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            color: #FF6B35;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #f0f0f0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: #FF6B35;
+            background: #fff5f0;
+        }
+
+        .option.selected {
+            border-color: #FF6B35;
+            background: #fff5f0;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .result-icon {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .result-description {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .result-details {
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        .result-details h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .result-details ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .result-details li {
+            padding: 5px 0;
+            color: #666;
+        }
+
+        .result-details li:before {
+            content: "• ";
+            color: #FF6B35;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: #FF6B35;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .stat {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FF6B35;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                max-width: 95%;
+                margin: 10px;
+            }
+            
+            .page {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
-<body class="min-h-screen flex flex-col bg-[#2d1a2d] text-white font-sans">
-  <canvas id="star-bg"></canvas>
-  <!-- 유튜브 음악 자동재생 (숨김) -->
-  <iframe width="0" height="0" src="https://www.youtube.com/embed/uP12eRXd5EE?autoplay=1&loop=1&playlist=uP12eRXd5EE&mute=1" frameborder="0" allow="autoplay" style="display:none;"></iframe>
-  <!-- 고정 내비게이션 -->
-  <nav id="mainNav" class="fixed top-0 w-full bg-[#2d1a2d]/90 backdrop-blur z-50 transition-all duration-300">
-    <div class="max-w-6xl mx-auto flex items-center justify-between py-4 px-4">
-      <div class="text-xl font-bold tracking-widest">TEAM ELEVEN</div>
-      <div class="hidden md:flex gap-6 font-semibold">
-        <a href="#main" class="hover:text-[#ffd700] nav-link">Main</a>
-        <a href="#about" class="hover:text-[#ffd700] nav-link">About</a>
-        <a href="#activity" class="hover:text-[#ffd700] nav-link">Activity</a>
-        <a href="#join" class="hover:text-[#ffd700] nav-link">Join</a>
-      </div>
-      <!-- 햄버거 메뉴 -->
-      <button id="navToggle" class="md:hidden flex flex-col gap-1.5">
-        <span class="w-7 h-1 bg-white rounded"></span>
-        <span class="w-7 h-1 bg-white rounded"></span>
-        <span class="w-7 h-1 bg-white rounded"></span>
-      </button>
+<body>
+    <div class="container">
+        <!-- 메인 페이지 -->
+        <div id="main-page" class="page active">
+            <div class="logo">POOMANG</div>
+            <div class="illustration">🧡</div>
+            <div class="title">발열-분노형</div>
+            <div class="subtitle">
+                열이 오르고 얼굴이 붉어 붉어지며,<br>
+                감정적으로는 짜증이나 분노가 가장 올라온다.<br>
+                내 몸과의 나를 자극하는 건 무엇인가.
+            </div>
+            
+            <div class="tags">
+                <div class="tag">#사랑</div>
+                <div class="tag">#돈</div>
+                <div class="tag">#패션</div>
+                <div class="tag">#건강</div>
+            </div>
+
+            <button class="btn btn-primary" onclick="startTest()">테스트 시작</button>
+            <button class="btn btn-secondary">저장하기</button>
+            <button class="btn btn-secondary">재미있어요</button>
+            <button class="btn btn-secondary">정확해요</button>
+            <button class="btn btn-secondary">공유하기</button>
+        </div>
+
+        <!-- 테스트 페이지 -->
+        <div id="test-page" class="page">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            
+            <div class="question-container">
+                <div class="question-number" id="question-number">1/24</div>
+                <div class="question-text" id="question-text"></div>
+                
+                <div class="options" id="options">
+                    <label class="option">
+                        <input type="radio" name="answer" value="0">
+                        <span>매우 그렇지 않다</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="answer" value="1">
+                        <span>그렇지 않다</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="answer" value="2">
+                        <span>보통이다</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="answer" value="3">
+                        <span>그렇다</span>
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="answer" value="4">
+                        <span>매우 그렇다</span>
+                    </label>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" style="display: none;">다음 문항</button>
+        </div>
+
+        <!-- 결과 페이지 -->
+        <div id="result-page" class="page">
+            <div class="result-icon" id="result-icon">🔥</div>
+            <div class="result-title" id="result-title">발열형</div>
+            <div class="result-description" id="result-description">
+                열이 오르고 얼굴이 붉어지며, 감정적으로는 짜증이나 분노가 가장 올라옵니다.
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="body-reaction">85%</div>
+                    <div class="stat-label">신체 반응</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="emotion-reaction">78%</div>
+                    <div class="stat-label">감정 반응</div>
+                </div>
+            </div>
+
+            <div class="result-details">
+                <h3>주요 증상</h3>
+                <ul id="symptoms">
+                    <li>열이나 가슴이 카르하게 내려 하는 것</li>
+                    <li>기분이 좋지 않아서 거나 주변가가 방해해</li>
+                    <li>짜증이 나거나 신경질적인 변화</li>
+                    <li>얼굴이 붉어지거나 상태가 극심해</li>
+                </ul>
+
+                <h3>추천 활동</h3>
+                <ul id="recommendations">
+                    <li>심호흡이나 명상으로 마음을 안정</li>
+                    <li>시원한 물 마시기</li>
+                    <li>가벼운 운동으로 스트레스 해소</li>
+                    <li>충분한 휴식과 수면</li>
+                </ul>
+            </div>
+
+            <button class="btn btn-primary" onclick="shareResult()">공유하기</button>
+            <button class="btn btn-secondary" onclick="restartTest()">다시 테스트하기</button>
+        </div>
     </div>
-    <div id="mobileNav" class="md:hidden hidden flex-col gap-4 px-4 pb-4 bg-[#2d1a2d]/95">
-      <a href="#main" class="block py-2 nav-link">Main</a>
-      <a href="#about" class="block py-2 nav-link">About</a>
-      <a href="#activity" class="block py-2 nav-link">Activity</a>
-      <a href="#join" class="block py-2 nav-link">Join</a>
-    </div>
-  </nav>
 
-  <main class="pt-20">
-    <!-- 메인 섹션 -->
-    <section id="main" class="min-h-screen flex flex-col justify-center items-center bg-transparent transition-colors duration-500">
-      <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight drop-shadow-lg relative select-none main-glow-title animate-glow">
-        <span class="bg-gradient-to-br from-white via-[#ffd700] to-white bg-clip-text text-transparent">Dreams Come True!</span>
-      </h1>
-      <p class="text-lg md:text-2xl text-white/90 mb-10 max-w-2xl text-center">열정과 팀워크로 뭉친 TEAM ELEVEN!<br>경상국립대학교를 대표하는 대학 축구동아리입니다.</p>
-      <a href="#join" class="bg-[#ffd700] text-[#2d1a2d] font-bold text-lg py-4 px-10 rounded-lg shadow-xl hover:bg-white transition">JOIN US</a>
-    </section>
+    <script>
+        // 테스트 데이터
+        const questions = [
+            "스트레스를 받으면 얼굴이 화끈거린다",
+            "화가 나면 목소리가 커진다",
+            "감정이 격해지면 손이 떨린다",
+            "속상한 일이 있으면 잠이 안 온다",
+            "화날 때 심장이 빨리 뛴다",
+            "스트레스를 받으면 식욕이 없어진다",
+            "긴장하면 얼굴이 빨개진다",
+            "화가 나면 주먹을 꽉 쥔다",
+            "속상하면 가슴이 답답하다",
+            "스트레스를 받으면 머리가 아프다",
+            "감정이 격하면 몸이 뜨거워진다",
+            "화날 때 목이 메인다",
+            "스트레스를 받으면 소화가 안 된다",
+            "긴장하면 손바닥에 땀이 난다",
+            "화가 나면 얼굴 표정이 험악해진다",
+            "속상하면 눈물이 날 것 같다",
+            "스트레스를 받으면 집중이 안 된다",
+            "감정이 격하면 말이 빨라진다",
+            "화날 때 물건을 던지고 싶다",
+            "속상하면 혼자 있고 싶다",
+            "스트레스를 받으면 짜증이 난다",
+            "긴장하면 어깨가 뻣뻣해진다",
+            "화가 나면 참기 어렵다",
+            "감정 조절이 어려울 때가 있다"
+        ];
 
-    <!-- About 섹션 -->
-    <section id="about" class="min-h-screen flex flex-col justify-center items-center bg-[#2d1a2d] transition-colors duration-500">
-      <h2 class="text-3xl md:text-4xl font-bold mb-6">About</h2>
-      <p class="text-lg md:text-xl text-white/90 max-w-2xl text-center mb-8">GNU FC는 축구를 사랑하는 학생들이 모여<br>함께 성장하고, 즐기며, 도전하는 동아리입니다.<br>매주 정기 훈련과 다양한 교류전을 통해 실력과 우정을 쌓아갑니다.</p>
-      <img src="images/logo.png" alt="동아리 로고" class="w-32 h-32 rounded-full shadow-2xl bg-white object-contain mb-4"/>
-    </section>
+        const resultTypes = {
+            발열형: {
+                icon: "🔥",
+                background: "linear-gradient(45deg, #FF6B35, #F7931E)",
+                description: "열이 오르고 얼굴이 붉어지며, 감정적으로는 짜증이나 분노가 가장 올라옵니다.",
+                symptoms: [
+                    "열이나 가슴이 타는 듯한 느낌",
+                    "기분이 좋지 않아서 예민해짐",
+                    "짜증이 나거나 신경질적인 변화",
+                    "얼굴이 붉어지거나 상태가 극심함"
+                ],
+                recommendations: [
+                    "심호흡이나 명상으로 마음을 안정",
+                    "시원한 물 마시기",
+                    "가벼운 운동으로 스트레스 해소",
+                    "충분한 휴식과 수면"
+                ]
+            },
+            분노형: {
+                icon: "😡",
+                background: "linear-gradient(45deg, #E53E3E, #C53030)",
+                description: "감정이 폭발하듯 올라오며, 주로 분노나 짜증의 형태로 나타납니다.",
+                symptoms: [
+                    "갑작스러운 분노 폭발",
+                    "목소리가 커지거나 공격적으로 변함",
+                    "주먹을 쥐거나 물건을 던지고 싶음",
+                    "감정 조절이 어려움"
+                ],
+                recommendations: [
+                    "분노 조절 기법 연습",
+                    "운동이나 신체 활동으로 에너지 소모",
+                    "전문가 상담 고려",
+                    "규칙적인 생활 패턴 유지"
+                ]
+            },
+            냉정형: {
+                icon: "🧊",
+                background: "linear-gradient(45deg, #3182CE, #2C5282)",
+                description: "감정이 차갑게 가라앉으며, 이성적이고 냉정한 반응을 보입니다.",
+                symptoms: [
+                    "감정 표현이 줄어듦",
+                    "말수가 적어지고 차가워짐",
+                    "타인과의 거리감 형성",
+                    "논리적 사고 위주"
+                ],
+                recommendations: [
+                    "감정 표현 연습",
+                    "따뜻한 차나 음료 마시기",
+                    "친한 사람과 대화하기",
+                    "감정 일기 쓰기"
+                ]
+            }
+        };
 
-    <!-- Activity 섹션 (뉴스/활동) -->
-    <section id="activity" class="min-h-screen flex flex-col items-center bg-[#2d1a2d] transition-colors duration-500">
-      <h2 class="text-3xl md:text-4xl font-bold mb-10 mt-8">Activity & News</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl px-4">
-        <div class="bg-white/10 rounded-2xl overflow-hidden shadow-xl flex flex-col transition-transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl opacity-0 transition-opacity duration-500" data-reveal="fade-up">
-          <img src="images/best11.png" alt="주요뉴스1" class="h-48 w-full object-cover shadow-lg"/>
-          <div class="p-5 flex-1 flex flex-col">
-            <span class="text-xs font-bold text-[#ffd700] mb-1">CLUB</span>
-            <h3 class="text-lg font-bold mb-2">2025 전국대회 출전 확정!</h3>
-            <p class="text-sm text-white/80 mb-3">우리 동아리가 전국대회 본선에 진출합니다. 많은 응원 부탁드립니다!</p>
-            <span class="text-xs text-white/60 mt-auto">2시간 전</span>
-          </div>
-        </div>
-        <div class="bg-white/10 rounded-2xl overflow-hidden shadow-xl flex flex-col transition-transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl opacity-0 transition-opacity duration-500" data-reveal="fade-up">
-          <img src="images/squad.png" alt="주요뉴스2" class="h-48 w-full object-cover shadow-lg"/>
-          <div class="p-5 flex-1 flex flex-col">
-            <span class="text-xs font-bold text-[#ffd700] mb-1">GALLERY</span>
-            <h3 class="text-lg font-bold mb-2">2025 단체 사진 공개</h3>
-            <p class="text-sm text-white/80 mb-3">전국대회 출전 전, 모두가 한마음으로 찍은 단체 사진을 확인하세요.</p>
-            <span class="text-xs text-white/60 mt-auto">1일 전</span>
-          </div>
-        </div>
-        <div class="bg-white/10 rounded-2xl overflow-hidden shadow-xl flex flex-col transition-transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl opacity-0 transition-opacity duration-500" data-reveal="fade-up">
-          <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=600&q=80" alt="주요뉴스3" class="h-48 w-full object-cover shadow-lg"/>
-          <div class="p-5 flex-1 flex flex-col">
-            <span class="text-xs font-bold text-[#ffd700] mb-1">NOTICE</span>
-            <h3 class="text-lg font-bold mb-2">신입부원 모집 안내</h3>
-            <p class="text-sm text-white/80 mb-3">2025학년도 신입부원 상시 모집! 지금 바로 지원하고 새로운 추억을 시작하세요.</p>
-            <span class="text-xs text-white/60 mt-auto">3일 전</span>
-          </div>
-        </div>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl px-4 mt-10">
-        <div class="bg-white/10 rounded-2xl overflow-hidden shadow-xl flex flex-col transition-transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl opacity-0 transition-opacity duration-500" data-reveal="fade-up">
-          <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="뉴스1" class="h-40 w-full object-cover shadow-lg"/>
-          <div class="p-5 flex-1 flex flex-col">
-            <span class="text-xs font-bold text-[#ffd700] mb-1">REVIEW</span>
-            <h3 class="text-base font-bold mb-2">최근 경기 리뷰</h3>
-            <p class="text-sm text-white/80 mb-3">진주대와의 친선경기에서 보여준 멋진 플레이를 리뷰합니다.</p>
-            <span class="text-xs text-white/60 mt-auto">5일 전</span>
-          </div>
-        </div>
-        <div class="bg-white/10 rounded-2xl overflow-hidden shadow-xl flex flex-col transition-transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl opacity-0 transition-opacity duration-500" data-reveal="fade-up">
-          <img src="images/logo.png" alt="뉴스2" class="h-40 w-full object-cover shadow-lg"/>
-          <div class="p-5 flex-1 flex flex-col">
-            <span class="text-xs font-bold text-[#ffd700] mb-1">CLUB</span>
-            <h3 class="text-base font-bold mb-2">동아리 공식 로고 리뉴얼</h3>
-            <p class="text-sm text-white/80 mb-3">새롭게 바뀐 OO동아리의 공식 엠블럼을 소개합니다.</p>
-            <span class="text-xs text-white/60 mt-auto">1주 전</span>
-          </div>
-        </div>
-        <div class="bg-white/10 rounded-2xl overflow-hidden shadow-xl flex flex-col transition-transform hover:-translate-y-1 hover:scale-105 hover:shadow-2xl opacity-0 transition-opacity duration-500" data-reveal="fade-up">
-          <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=600&q=80" alt="뉴스3" class="h-40 w-full object-cover shadow-lg"/>
-          <div class="p-5 flex-1 flex flex-col">
-            <span class="text-xs font-bold text-[#ffd700] mb-1">GALLERY</span>
-            <h3 class="text-base font-bold mb-2">훈련 현장 스케치</h3>
-            <p class="text-sm text-white/80 mb-3">매주 이어지는 팀 훈련, 열정 가득한 순간을 담았습니다.</p>
-            <span class="text-xs text-white/60 mt-auto">2주 전</span>
-          </div>
-        </div>
-      </div>
-    </section>
+        let currentQuestion = 0;
+        let answers = [];
+        let scores = {
+            발열형: 0,
+            분노형: 0,
+            냉정형: 0
+        };
 
-    <!-- Join 섹션 -->
-    <section id="join" class="min-h-screen flex flex-col items-center justify-center bg-[#2d1a2d] transition-colors duration-500">
-      <img src="images/logo.png" alt="동아리 로고" class="w-32 h-32 rounded-full shadow-2xl mb-6 bg-white object-contain"/>
-      <a href="#" class="w-full max-w-xs bg-[#ffd700] text-[#2d1a2d] font-bold text-lg py-4 rounded-lg shadow-xl text-center hover:bg-white transition mb-2">SIGN UP OR LOG IN</a>
-      <p class="text-white/80 mt-6 text-center">GNU FC와 함께할 새로운 동료를 기다립니다!</p>
-    </section>
-  </main>
+        function startTest() {
+            document.getElementById('main-page').classList.remove('active');
+            document.getElementById('test-page').classList.add('active');
+            showQuestion();
+        }
 
-  <!-- 하단 메뉴/푸터 -->
-  <footer class="mt-auto bg-[#3a223a] py-6">
-    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between px-4 gap-4">
-      <nav class="flex flex-wrap gap-4 text-sm font-semibold">
-        <a href="#main" class="hover:underline">Main</a>
-        <a href="#about" class="hover:underline">About</a>
-        <a href="#activity" class="hover:underline">Activity</a>
-        <a href="#join" class="hover:underline">Join</a>
-      </nav>
-      <div class="flex items-center gap-4">
-        <select class="bg-[#3a223a] border border-white/30 rounded px-2 py-1 text-white text-sm">
-          <option>한국어</option>
-          <option>English</option>
-        </select>
-        <img src="images/logo.png" alt="학교 로고" class="w-10 h-10 rounded-full bg-white object-contain shadow-lg"/>
-      </div>
-    </div>
-    <div class="text-center text-xs text-white/60 mt-4">&copy; 2024 경상국립대학교 축구동아리. Inspired by Liverpool FC.</div>
-  </footer>
+        function showQuestion() {
+            const questionNumber = document.getElementById('question-number');
+            const questionText = document.getElementById('question-text');
+            const progress = document.getElementById('progress');
+            const nextBtn = document.getElementById('next-btn');
 
-  <!-- 스크롤 트리거 애니메이션, 섹션 하이라이트, 햄버거 메뉴 JS + 별 배경 JS -->
-  <script>
-    // 별 배경 애니메이션
-    const canvas = document.getElementById('star-bg');
-    const ctx = canvas.getContext('2d');
-    let stars = [];
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    function randomBetween(a, b) { return a + Math.random() * (b - a); }
-    function createStars() {
-      stars = [];
-      const count = Math.floor(window.innerWidth * window.innerHeight / 1800);
-      for (let i = 0; i < count; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          r: randomBetween(0.4, 1.5),
-          o: randomBetween(0.3, 0.9),
-          s: randomBetween(0.2, 0.7), // speed
-          p: Math.random() * Math.PI * 2, // phase
-          c: Math.random() > 0.7 ? '#ffd700' : '#fff'
+            questionNumber.textContent = `${currentQuestion + 1}/24`;
+            questionText.textContent = questions[currentQuestion];
+            progress.style.width = `${((currentQuestion + 1) / 24) * 100}%`;
+            
+            // 라디오 버튼 초기화
+            const radios = document.querySelectorAll('input[name="answer"]');
+            radios.forEach(radio => {
+                radio.checked = false;
+                radio.parentElement.classList.remove('selected');
+            });
+            
+            nextBtn.style.display = 'none';
+        }
+
+        // 옵션 선택 시 이벤트 처리
+        document.getElementById('options').addEventListener('change', function(e) {
+            if (e.target.type === 'radio') {
+                const options = document.querySelectorAll('.option');
+                options.forEach(option => option.classList.remove('selected'));
+                e.target.parentElement.classList.add('selected');
+                
+                document.getElementById('next-btn').style.display = 'block';
+            }
         });
-      }
-    }
-    function animateStars() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      for (let star of stars) {
-        // twinkle
-        const tw = 0.5 + 0.5 * Math.sin(performance.now() * 0.001 * star.s + star.p);
-        ctx.globalAlpha = star.o * tw;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
-        ctx.fillStyle = star.c;
-        ctx.shadowColor = star.c;
-        ctx.shadowBlur = 8 * tw;
-        ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-      ctx.shadowBlur = 0;
-      requestAnimationFrame(animateStars);
-    }
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-      createStars();
-    });
-    resizeCanvas();
-    createStars();
-    animateStars();
 
-    // 햄버거 메뉴
-    const navToggle = document.getElementById('navToggle');
-    const mobileNav = document.getElementById('mobileNav');
-    navToggle.addEventListener('click', () => {
-      mobileNav.classList.toggle('hidden');
-    });
+        function nextQuestion() {
+            const selectedAnswer = document.querySelector('input[name="answer"]:checked');
+            if (!selectedAnswer) return;
 
-    // Intersection Observer로 섹션 하이라이트
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('nav a.nav-link');
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          navLinks.forEach(link => {
-            link.classList.toggle('text-[#ffd700]', link.getAttribute('href') === `#${entry.target.id}`);
-          });
+            const score = parseInt(selectedAnswer.value);
+            answers.push(score);
+
+            // 점수 계산 (간단한 로직)
+            if (score >= 3) {
+                if (currentQuestion % 3 === 0) scores.발열형 += score;
+                else if (currentQuestion % 3 === 1) scores.분노형 += score;
+                else scores.냉정형 += score;
+            }
+
+            currentQuestion++;
+
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
         }
-      });
-    }, { threshold: 0.5 });
-    sections.forEach(section => observer.observe(section));
 
-    // 스크롤 트리거 애니메이션 (페이드인)
-    const revealEls = document.querySelectorAll('[data-reveal]');
-    const revealObs = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.remove('opacity-0');
-          entry.target.classList.add('opacity-100');
+        function showResult() {
+            document.getElementById('test-page').classList.remove('active');
+            document.getElementById('result-page').classList.add('active');
+
+            // 최고 점수 유형 찾기
+            const maxScore = Math.max(...Object.values(scores));
+            const resultType = Object.keys(scores).find(key => scores[key] === maxScore) || '발열형';
+            
+            const result = resultTypes[resultType];
+            
+            // 결과 표시
+            document.getElementById('result-icon').innerHTML = result.icon;
+            document.getElementById('result-icon').style.background = result.background;
+            document.getElementById('result-title').textContent = resultType;
+            document.getElementById('result-description').textContent = result.description;
+            
+            // 통계 표시
+            const bodyReaction = Math.floor(Math.random() * 30) + 70;
+            const emotionReaction = Math.floor(Math.random() * 30) + 60;
+            document.getElementById('body-reaction').textContent = bodyReaction + '%';
+            document.getElementById('emotion-reaction').textContent = emotionReaction + '%';
+            
+            // 상세 정보 표시
+            const symptomsEl = document.getElementById('symptoms');
+            const recommendationsEl = document.getElementById('recommendations');
+            
+            symptomsEl.innerHTML = result.symptoms.map(symptom => `<li>${symptom}</li>`).join('');
+            recommendationsEl.innerHTML = result.recommendations.map(rec => `<li>${rec}</li>`).join('');
         }
-      });
-    }, { threshold: 0.2 });
-    revealEls.forEach(el => revealObs.observe(el));
 
-    // 스크롤 시 헤더 축소 효과
-    const nav = document.getElementById('mainNav');
-    let lastScroll = 0;
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 30) {
-        nav.classList.add('nav-shrink');
-      } else {
-        nav.classList.remove('nav-shrink');
-      }
-    });
-  </script>
+        function shareResult() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'POOMANG 유형 테스트 결과',
+                    text: '나의 유형을 확인해보세요!',
+                    url: window.location.href
+                });
+            } else {
+                // 폴백: 클립보드에 복사
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('링크가 클립보드에 복사되었습니다!');
+                });
+            }
+        }
+
+        function restartTest() {
+            currentQuestion = 0;
+            answers = [];
+            scores = {
+                발열형: 0,
+                분노형: 0,
+                냉정형: 0
+            };
+            
+            document.getElementById('result-page').classList.remove('active');
+            document.getElementById('main-page').classList.add('active');
+        }
+    </script>
 </body>
-</html>
+</html> 
