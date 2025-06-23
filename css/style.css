@@ -65,13 +65,26 @@ body {
 /* 커스텀 체크박스 및 라디오 버튼 스타일 */
 .custom-checkbox {
   cursor: pointer;
+  user-select: none;
 }
+
+.custom-checkbox .w-5 {
+  transition: all 0.2s ease;
+  border: 2px solid #d1d5db;
+  background-color: white;
+}
+
+.custom-checkbox .w-3 {
+  transition: all 0.2s ease;
+}
+
 .custom-checkbox input:checked + .w-5 {
   background-color: #ff1e00 !important;
   border-color: #ff1e00 !important;
 }
+
 .custom-checkbox input:checked + .w-5 .w-3 {
-  display: block !important;
+  display: flex !important;
 }
 
 .custom-radio {
@@ -93,3 +106,66 @@ body {
   border-color: #ff1e00;
   transition: border-color 0.2s ease;
 } 
+
+/* 탭 스타일 */
+.caption-tab {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.caption-tab.active {
+  background-color: #ff1e00 !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 30, 0, 0.3);
+}
+
+.caption-tab:hover:not(.active) {
+  background-color: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.tab-panel {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+}
+
+.tab-panel.active {
+  opacity: 1;
+  transform: translateY(0);
+} 
+
+/* 성공 메시지 모달 애니메이션 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+} 
+
+.tab-panel.hidden {
+  display: none;
+}

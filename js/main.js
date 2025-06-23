@@ -290,13 +290,16 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 
-    // Custom checkboxes
-    const checkboxInputs = quoteForm.querySelectorAll('input[type="checkbox"]');
-    checkboxInputs.forEach((input) => {
-      input.addEventListener("change", function () {
-        const wrapper = this.nextElementSibling;
-        const indicator = wrapper.querySelector(".w-3");
-        if (this.checked) {
+    // Custom checkboxes - 통합된 이벤트 처리
+    const checkboxLabels = quoteForm.querySelectorAll('.custom-checkbox');
+    checkboxLabels.forEach((label) => {
+      const input = label.querySelector('input[type="checkbox"]');
+      const wrapper = label.querySelector('.w-5');
+      const indicator = wrapper.querySelector('.w-3');
+      
+      // 체크박스 상태 업데이트 함수
+      function updateCheckboxState() {
+        if (input.checked) {
           wrapper.classList.add("bg-primary", "border-primary");
           wrapper.classList.remove("border-gray-300");
           indicator.classList.remove("hidden");
@@ -305,23 +308,24 @@ document.addEventListener("DOMContentLoaded", function () {
           wrapper.classList.add("border-gray-300");
           indicator.classList.add("hidden");
         }
-      });
-    });
-
-    // Label click handling for checkboxes
-    const checkboxLabels = quoteForm.querySelectorAll('.custom-checkbox');
-    checkboxLabels.forEach((label) => {
+      }
+      
+      // 라벨 클릭 이벤트
       label.addEventListener("click", function (e) {
-        // Prevent double-firing when clicking on the input itself
-        if (e.target.tagName.toLowerCase() === 'input') {
+        // 입력 필드 자체를 클릭한 경우 중복 처리 방지
+        if (e.target === input) {
           return;
         }
-        const input = this.querySelector('input[type="checkbox"]');
-        if (input) {
-          input.checked = !input.checked;
-          input.dispatchEvent(new Event('change'));
-        }
+        e.preventDefault();
+        input.checked = !input.checked;
+        updateCheckboxState();
       });
+      
+      // 입력 필드 직접 클릭/키보드 조작 시
+      input.addEventListener("change", updateCheckboxState);
+      
+      // 초기 상태 설정
+      updateCheckboxState();
     });
 
     // Form submission
@@ -392,12 +396,12 @@ HUSH 로켓그로스 팀 드림
           volume: volume || '선택하지 않음',
           services: services.length > 0 ? services.join(', ') : '선택하지 않음',
           message: message || '없음',
-          to_email: 'info@hush-logistics.com'
+          to_email: 'imim2000@nate.com'
         };
         
         emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
           .then(function(response) {
-            alert("견적 요청이 성공적으로 전송되었습니다! 빠른 시일 내에 연락드리겠습니다.");
+            showSuccessMessage();
             resetForm();
           })
           .catch(function(error) {
@@ -411,24 +415,105 @@ HUSH 로켓그로스 팀 드림
       }
       
       function openMailtoLink(subject, body) {
-        const mailtoLink = `mailto:info@hush-logistics.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        const mailtoLink = `mailto:imim2000@nate.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
         window.open(mailtoLink);
-        alert("견적 요청이 접수되었습니다. 이메일 클라이언트가 열렸습니다.\n내용을 확인하시고 전송해주세요. 빠른 시일 내에 연락드리겠습니다!");
+        showSuccessMessage("견적 요청이 접수되었습니다.\n이메일 클라이언트가 열렸습니다. 내용을 확인하시고 전송해주세요.");
         resetForm();
+      }
+      
+      function showSuccessMessage(customMessage = null) {
+        // 기존 성공 메시지 모달이 있다면 제거
+        const existingModal = document.getElementById('success-modal');
+        if (existingModal) {
+          existingModal.remove();
+        }
+        
+        const message = customMessage || "견적 요청이 성공적으로 전송되었습니다!";
+        
+        // 성공 메시지 모달 생성
+        const modalHTML = `
+          <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style="animation: fadeIn 0.3s ease-out;">
+            <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center" style="animation: slideUp 0.3s ease-out;">
+              <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="ri-check-line text-green-500 text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-800 mb-2">전송 완료!</h3>
+              <p class="text-gray-600 mb-6 whitespace-pre-line">${message}<br><br>빠른 시일 내에 연락드리겠습니다.</p>
+              <button id="success-modal-close" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-90 transition-all">
+                확인
+              </button>
+            </div>
+          </div>
+        `;
+        
+        // 모달을 body에 추가
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        
+        // 닫기 이벤트 추가
+        const modal = document.getElementById('success-modal');
+        const closeBtn = document.getElementById('success-modal-close');
+        
+        closeBtn.addEventListener('click', () => {
+          modal.style.animation = 'fadeOut 0.3s ease-out';
+          setTimeout(() => {
+            modal.remove();
+          }, 300);
+        });
+        
+        // 모달 외부 클릭시 닫기
+        modal.addEventListener('click', (e) => {
+          if (e.target === modal) {
+            modal.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => {
+              modal.remove();
+            }, 300);
+          }
+        });
+        
+        // ESC 키로 닫기
+        const handleEscape = (e) => {
+          if (e.key === 'Escape') {
+            modal.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => {
+              modal.remove();
+            }, 300);
+            document.removeEventListener('keydown', handleEscape);
+          }
+        };
+        document.addEventListener('keydown', handleEscape);
+        
+        // 3초 후 자동 닫기
+        setTimeout(() => {
+          if (document.getElementById('success-modal')) {
+            modal.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => {
+              if (document.getElementById('success-modal')) {
+                modal.remove();
+              }
+            }, 300);
+          }
+        }, 3000);
       }
       
       function resetForm() {
         // Reset form
         quoteForm.reset();
 
-        // Reset custom form controls
+        // Reset custom radio controls
         quoteForm.querySelectorAll(".custom-radio .w-3").forEach((div) => {
           div.classList.add("hidden");
         });
-        quoteForm.querySelectorAll(".custom-checkbox .w-5").forEach((wrapper) => {
+        
+        // Reset custom checkbox controls
+        quoteForm.querySelectorAll(".custom-checkbox").forEach((label) => {
+          const input = label.querySelector('input[type="checkbox"]');
+          const wrapper = label.querySelector('.w-5');
+          const indicator = wrapper.querySelector('.w-3');
+          
+          input.checked = false;
           wrapper.classList.remove("bg-primary", "border-primary");
           wrapper.classList.add("border-gray-300");
-          wrapper.querySelector(".w-3").classList.add("hidden");
+          indicator.classList.add("hidden");
         });
       }
     });
@@ -494,4 +579,49 @@ HUSH 로켓그로스 팀 드림
       closeQuoteModal();
     }
   });
+
+  // Tab functionality for caption section
+  const captionTabs = document.querySelectorAll('.caption-tab');
+  const tabPanels = document.querySelectorAll('.tab-panel');
+
+  captionTabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const targetTab = this.getAttribute('data-tab');
+      
+      // Remove active class from all tabs
+      captionTabs.forEach(t => {
+        t.classList.remove('active', 'bg-primary', 'text-white');
+        t.classList.add('bg-gray-200', 'text-gray-700');
+      });
+      
+      // Add active class to clicked tab
+      this.classList.add('active', 'bg-primary', 'text-white');
+      this.classList.remove('bg-gray-200', 'text-gray-700');
+      
+      // Hide all tab panels
+      tabPanels.forEach(panel => {
+        panel.classList.add('hidden');
+        panel.classList.remove('active');
+      });
+      
+      // Show target tab panel
+      const targetPanel = document.getElementById(targetTab);
+      if (targetPanel) {
+        targetPanel.classList.remove('hidden');
+        targetPanel.classList.add('active');
+      }
+    });
+  });
+
+  // Quote modal triggers for tabs
+  const quoteModalTriggerTab1 = document.getElementById('quote-modal-trigger-tab1');
+  const quoteModalTriggerTab2 = document.getElementById('quote-modal-trigger-tab2');
+
+  if (quoteModalTriggerTab1) {
+    quoteModalTriggerTab1.addEventListener('click', openQuoteModal);
+  }
+
+  if (quoteModalTriggerTab2) {
+    quoteModalTriggerTab2.addEventListener('click', openQuoteModal);
+  }
 }); 
