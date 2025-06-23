@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HUSH 로켓그로스 서비스</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+    <script src="https://cdn.emailjs.com/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: { primary: "#ff1e00", secondary: "#f9e900" },
+            borderRadius: {
+              none: "0px",
+              sm: "4px",
+              DEFAULT: "8px",
+              md: "12px",
+              lg: "16px",
+              xl: "20px",
+              "2xl": "24px",
+              "3xl": "32px",
+              full: "9999px",
+              button: "8px",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-white min-h-screen">
+    <!-- 헤더 -->
+    <header
+      class="bg-white shadow-sm py-4 sticky top-0 z-40"
+    >
+      <div class="container mx-auto px-4 flex items-center justify-between">
+        <div class="text-2xl font-['Pacifico'] text-primary">hush</div>
+        <div class="flex items-center space-x-4">
+          <button
+            id="share-button"
+            class="flex items-center gap-2 px-6 py-2 !rounded-button font-medium bg-gray-100 hover:bg-gray-200 transition-all whitespace-nowrap"
+          >
+            <div class="w-4 h-4 flex items-center justify-center">
+              <i class="ri-share-line"></i>
+            </div>
+            <span>공유하기</span>
+          </button>
+          <a
+            href="#contact"
+            class="bg-primary text-white px-6 py-2 !rounded-button font-medium hover:bg-opacity-90 transition-all whitespace-nowrap"
+            >견적 문의하기</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <!-- Share Modal -->
+    <div
+      id="share-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="share-modal-title"
+    >
+      <div class="fixed inset-0 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-md w-full p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 id="share-modal-title" class="text-xl font-bold">
+              초안 공유하기
+            </h3>
+            <button
+              id="share-modal-close"
+              class="text-gray-400 hover:text-gray-500"
+              aria-label="Close share modal"
+            >
+              <span class="w-8 h-8 flex items-center justify-center">
+                <i class="ri-close-line ri-lg" aria-hidden="true"></i>
+              </span>
+            </button>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1"
+                >공유 링크</label
+              >
+              <div class="flex gap-2">
+                <input
+                  type="text"
+                  id="share-link"
+                  readonly
+                  class="flex-1 px-3 py-2 border-none bg-gray-50 rounded focus:ring-2 focus:ring-primary focus:outline-none text-sm"
+                  value="https://preview.hush-logistics.com/draft/123"
+                  aria-label="Shareable link"
+                />
+                <button
+                  id="copy-link"
+                  class="bg-primary text-white px-4 py-2 !rounded-button font-medium hover:bg-opacity-90 transition-all whitespace-nowrap"
+                >
+                  복사
+                </button>
+              </div>
+            </div>
+            <div class="flex flex-col gap-3">
+              <button
+                class="flex items-center justify-center gap-2 w-full px-4 py-3 !rounded-button font-medium bg-[#FEE500] text-black hover:bg-opacity-90 transition-all whitespace-nowrap"
+              >
+                <div
+                  class="w-5 h-5 flex items-center justify-center"
+                  aria-hidden="true"
+                >
+                  <i class="ri-kakao-talk-fill"></i>
+                </div>
+                <span>카카오톡으로 공유하기</span>
+              </button>
+              <button
+                class="flex items-center justify-center gap-2 w-full px-4 py-3 !rounded-button font-medium bg-gray-100 hover:bg-gray-200 transition-all whitespace-nowrap"
+              >
+                <div
+                  class="w-5 h-5 flex items-center justify-center"
+                  aria-hidden="true"
+                >
+                  <i class="ri-mail-line"></i>
+                </div>
+                <span>이메일로 공유하기</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <main>
+      <!-- 히어로 섹션 -->
+      <section class="hero-section py-16 md:py-24">
+        <div
+          class="container mx-auto px-4 flex flex-col md:flex-row items-center"
+        >
+          <div class="w-full md:w-1/2 mb-10 md:mb-0" data-aos="fade-right" data-aos-duration="1000">
+            <h1 class="text-4xl md:text-5xl font-bold price-text mb-4" data-aos="fade-up" data-aos-delay="200">
+              택배비 <br />1,500원부터!
+            </h1>
+            <h2 class="text-2xl md:text-3xl font-bold mb-6" data-aos="fade-up" data-aos-delay="400">
+              로켓그로스, 허쉬가 빠르고 정직하게!
+            </h2>
+            <p class="text-lg mb-8" data-aos="fade-up" data-aos-delay="600">
+              소형 / 투잡 셀러를 위한 최고의 파트너 
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4" data-aos="fade-up" data-aos-delay="800">
+              <a
+                href="#contact"
+                class="bg-primary text-white px-8 py-3 !rounded-button font-medium text-center hover:bg-opacity-90 transition-all whitespace-nowrap"
+                >견적 받기</a
+              >
+              <a
+                href="#services"
+                class="border border-gray-800 text-gray-800 px-8 py-3 !rounded-button font-medium text-center hover:bg-gray-100 transition-all whitespace-nowrap"
+                >서비스 알아보기</a
+              >
+            </div>
+            <div class="mt-8 flex flex-col gap-2" data-aos="fade-up" data-aos-delay="1000">
+              <div class="flex items-center gap-2" data-aos="fade-up" data-aos-delay="1100">
+                <div
+                  class="w-6 h-6 flex items-center justify-center text-primary"
+                  aria-hidden="true"
+                >
+                  <i class="ri-check-line ri-lg"></i>
+                </div>
+                <span class="text-gray-800">숨겨진 요금 X</span>
+              </div>
+              <div class="flex items-center gap-2" data-aos="fade-up" data-aos-delay="1200">
+                <div
+                  class="w-6 h-6 flex items-center justify-center text-primary"
+                  aria-hidden="true"
+                >
+                  <i class="ri-check-line ri-lg"></i>
+                </div>
+                <span class="text-gray-800">100% 당일출고</span>
+              </div>
+              <div class="flex items-center gap-2" data-aos="fade-up" data-aos-delay="1300">
+                <div
+                  class="w-6 h-6 flex items-center justify-center text-primary"
+                  aria-hidden="true"
+                >
+                  <i class="ri-check-line ri-lg"></i>
+                </div>
+                <span class="text-gray-800">빠른 CS처리</span>
+              </div>
+            </div>
+          </div>
+          <div class="w-full md:w-1/2 flex justify-center" data-aos="fade-left" data-aos-duration="1000">
+            <div class="relative">
+              <div
+                class="bg-white p-4 rounded-lg shadow-lg absolute -top-6 -left-6 z-10"
+                data-aos="fade-down"
+                data-aos-delay="500"
+              >
+                <p class="text-sm font-medium">저희도 밥 안 먹고 하면</p>
+                <p class="text-xl font-bold price-text">1,500원 가능합니다! 😢</p>
+              </div>
+              <img
+                src="https://readdy.ai/api/search-image?query=A%20cartoon%20delivery%20person%20in%20red%20uniform%20and%20cap%2C%20looking%20sad%20with%20a%20tear%2C%20holding%20a%20cardboard%20box.%20Simple%2C%20flat%20illustration%20style%20with%20clean%20lines%20and%20bright%20colors.%20Yellow%20background.%20Korean%20style%20cartoon%20character.&width=500&height=500&seq=1&orientation=squarish"
+                alt="택배 기사 일러스트"
+                class="rounded-lg shadow-xl relative z-0"
+                loading="lazy"
+                decoding="async"
+                data-aos="zoom-in"
+                data-aos-delay="300"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA 섹션 -->
+      <section class="py-12 bg-gradient-to-r from-primary to-red-600">
+        <div class="container mx-auto px-4">
+          <div class="text-center" data-aos="fade-up" data-aos-duration="1000">
+            <div class="flex justify-center items-center mb-6" data-aos="zoom-in" data-aos-delay="200">
+              <div class="bg-white/20 rounded-full p-4 mr-4">
+                <div class="w-12 h-12 flex items-center justify-center text-white">
+                  <i class="ri-rocket-2-line ri-2x" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="bg-white/20 rounded-full p-4 mr-4">
+                <div class="w-12 h-12 flex items-center justify-center text-white">
+                  <i class="ri-store-3-line ri-2x" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="bg-white/20 rounded-full p-4">
+                <div class="w-12 h-12 flex items-center justify-center text-white">
+                  <i class="ri-briefcase-line ri-2x" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-4" data-aos="fade-up" data-aos-delay="300">
+              소형셀러? 투잡셀러? 지금 바로 시작하세요!
+            </h2>
+            <p class="text-white/90 text-lg mb-8 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="400">
+              복잡한 물류, 높은 배송비 때문에 고민이셨나요?<br>
+              HUSH와 함께 로켓그로스 입점부터 배송까지 한 번에 해결하세요!
+            </p>
+                         <div class="flex flex-col sm:flex-row gap-4 justify-center items-center" data-aos="fade-up" data-aos-delay="500">
+               <button
+                 id="quote-modal-trigger-2"
+                 class="bg-white text-primary px-8 py-4 !rounded-button font-bold text-lg hover:bg-gray-100 transition-all whitespace-nowrap shadow-lg cta-button-primary"
+               >
+                 <span class="flex items-center gap-2">
+                   <i class="ri-file-text-line ri-lg" aria-hidden="true"></i>
+                   견적서 보기
+                 </span>
+               </button>
+               <a
+                 href="#services"
+                 class="border-2 border-white text-white px-8 py-4 !rounded-button font-bold text-lg hover:bg-white hover:text-primary transition-all whitespace-nowrap cta-button-secondary"
+               >
+                 <span class="flex items-center gap-2">
+                   <i class="ri-information-line ri-lg" aria-hidden="true"></i>
+                   자세히 알아보기
+                 </span>
+               </a>
+             </div>
+            <div class="mt-8 flex flex-wrap justify-center gap-6 text-white/80" data-aos="fade-up" data-aos-delay="600">
+              <div class="flex items-center gap-2">
+                <i class="ri-check-double-line ri-lg text-secondary" aria-hidden="true"></i>
+                <span>월 100개 미만도 OK</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="ri-check-double-line ri-lg text-secondary" aria-hidden="true"></i>
+                <span>부업으로도 가능</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <i class="ri-check-double-line ri-lg text-secondary" aria-hidden="true"></i>
+                <span>초보자도 쉽게</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 서비스 소개 섹션 -->
+      <section id="services" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-4" data-aos="fade-up" data-aos-delay="100">로켓그로스 전문 서비스</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+              쿠팡 로켓그로스 입점을 위한 모든 과정을 HUSH가 책임집니다. 바코드
+              부착부터 포장, 배송, 입고까지 원스톱 서비스로 여러분의 비즈니스를
+              성장시켜 드립니다.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div
+              class="bg-white p-6 rounded-lg shadow-md service-card"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              <div
+                class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4"
+              >
+                <div
+                  class="w-6 h-6 flex items-center justify-center text-gray-800"
+                  aria-hidden="true"
+                >
+                  <i class="ri-barcode-line ri-lg"></i>
+                </div>
+              </div>
+              <h3 class="text-xl font-bold mb-2">바코드 부착</h3>
+              <p class="text-gray-600">
+                쿠팡 로켓그로스 기준에 맞는 정확한 바코드 부착 서비스를
+                제공합니다.
+              </p>
+            </div>
+            <div
+              class="bg-white p-6 rounded-lg shadow-md service-card"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <div
+                class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4"
+              >
+                <div
+                  class="w-6 h-6 flex items-center justify-center text-gray-800"
+                  aria-hidden="true"
+                >
+                  <i class="ri-box-3-line ri-lg"></i>
+                </div>
+              </div>
+              <h3 class="text-xl font-bold mb-2">안전한 포장</h3>
+              <p class="text-gray-600">
+                로켓그로스 기준에 맞는 안전하고 효율적인 포장 서비스를 제공합니다.
+              </p>
+            </div>
+            <div
+              class="bg-white p-6 rounded-lg shadow-md service-card"
+              data-aos="fade-up"
+              data-aos-delay="300"
+            >
+              <div
+                class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4"
+              >
+                <div
+                  class="w-6 h-6 flex items-center justify-center text-gray-800"
+                  aria-hidden="true"
+                >
+                  <i class="ri-truck-line ri-lg"></i>
+                </div>
+              </div>
+              <h3 class="text-xl font-bold mb-2">신속한 배송</h3>
+              <p class="text-gray-600">
+                쿠팡 로켓그로스 물류센터로 정확하고 신속하게 배송해 드립니다.
+              </p>
+            </div>
+            <div
+              class="bg-white p-6 rounded-lg shadow-md service-card"
+              data-aos="fade-up"
+              data-aos-delay="400"
+            >
+              <div
+                class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4"
+              >
+                <div
+                  class="w-6 h-6 flex items-center justify-center text-gray-800"
+                  aria-hidden="true"
+                >
+                  <i class="ri-store-2-line ri-lg"></i>
+                </div>
+              </div>
+              <h3 class="text-xl font-bold mb-2">효율적인 입고</h3>
+              <p class="text-gray-600">
+                쿠팡 로켓그로스 입고 절차를 효율적으로 처리해 드립니다.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- 가격 정책 섹션 -->
+      <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-4">투명한 가격 정책</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">
+              HUSH는 숨겨진 비용 없이 정직한 가격으로 서비스를 제공합니다. 물량에
+              따라 더 합리적인 가격을 제안해 드립니다.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div
+              class="bg-gray-50 rounded-lg overflow-hidden shadow-md hover-gradient-shadow h-full flex flex-col"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              <div class="bg-gray-100 p-6">
+                <h3 class="text-xl font-bold mb-2">소량 발송</h3>
+                <div class="text-3xl font-bold price-text">1,900원부터</div>
+                <p class="text-gray-600 mt-2">월 100개 미만</p>
+              </div>
+              <div class="p-6 flex-1 flex flex-col">
+                <ul class="space-y-3 flex-1">
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>바코드 부착</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>기본 포장</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>로켓그로스 배송</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>기본 CS 처리</span>
+                  </li>
+                </ul>
+                <a
+                  href="#contact"
+                  class="block text-center bg-white border border-primary text-primary mt-6 px-6 py-2 !rounded-button font-medium hover:bg-primary hover:text-white transition-all whitespace-nowrap"
+                  >견적 문의하기</a
+                >
+              </div>
+            </div>
+            <div
+              class="bg-primary bg-opacity-5 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all border-2 border-primary relative h-full flex flex-col"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <div
+                class="absolute top-0 right-0 bg-primary text-white px-4 py-1 text-sm font-medium"
+              >
+                인기
+              </div>
+              <div class="bg-primary bg-opacity-10 p-6">
+                <h3 class="text-xl font-bold mb-2">중량 발송</h3>
+                <div class="text-3xl font-bold price-text">1,700원부터</div>
+                <p class="text-gray-600 mt-2">월 100-500개</p>
+              </div>
+              <div class="p-6 flex-1 flex flex-col">
+                <ul class="space-y-3 flex-1">
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>바코드 부착</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>고급 포장</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>로켓그로스 우선 배송</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>우선 CS 처리</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>월간 리포트 제공</span>
+                  </li>
+                </ul>
+                <a
+                  href="#contact"
+                  class="block text-center bg-primary text-white mt-6 px-6 py-2 !rounded-button font-medium hover:bg-opacity-90 transition-all whitespace-nowrap"
+                  >견적 문의하기</a
+                >
+              </div>
+            </div>
+            <div
+              class="bg-gray-50 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all h-full flex flex-col"
+              data-aos="fade-up"
+              data-aos-delay="300"
+            >
+              <div class="bg-gray-100 p-6">
+                <h3 class="text-xl font-bold mb-2">대량 발송</h3>
+                <div class="text-3xl font-bold price-text">1,500원부터</div>
+                <p class="text-gray-600 mt-2">월 500개 이상</p>
+              </div>
+              <div class="p-6 flex-1 flex flex-col">
+                <ul class="space-y-3 flex-1">
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>바코드 부착</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>프리미엄 포장</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>로켓그로스 특급 배송</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>VIP CS 처리</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>전담 매니저 배정</span>
+                  </li>
+                  <li class="flex items-start gap-2">
+                    <div
+                      class="w-5 h-5 flex items-center justify-center text-primary mt-0.5"
+                    >
+                      <i class="ri-check-line"></i>
+                    </div>
+                    <span>주간 리포트 제공</span>
+                  </li>
+                </ul>
+                <a
+                  href="#contact"
+                  class="block text-center bg-white border border-primary text-primary mt-6 px-6 py-2 !rounded-button font-medium hover:bg-primary hover:text-white transition-all whitespace-nowrap"
+                  >견적 문의하기</a
+                >
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+      <!-- 특징 섹션 -->
+      <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-4" data-aos="fade-up" data-aos-delay="100">
+              <span class="text-4xl">😭</span> <span class="text-primary">1인/투잡 셀러의 눈물...</span> <br class="sm:hidden">
+              <span class="bg-gradient-to-r from-primary to-red-600 bg-clip-text text-transparent font-extrabold">이제 닦아드립니다!</span> <span class="text-4xl">😭</span>
+            </h2>
+            
+            <!-- 고민 공감 섹션 -->
+            <div class="bg-white rounded-xl p-8 mb-8 shadow-lg max-w-4xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+              <div class="text-left space-y-4">
+                <p class="text-gray-700 leading-relaxed">
+                  <strong>밤늦게까지 물건 찾고, 낮은 마진률에 속상하셨죠?</strong><br>
+                  대형 셀러들이 가져가는 '규모의 경제' 때문에 아무리 애써도 단가 차이를 극복하기 어려웠을 겁니다.
+                  결국 상품 가격 경쟁에서 밀리고, 열심히 팔아도 남는 게 적어 힘이 빠지셨을 텐데요.
+                </p>
+                
+                <div class="space-y-6">
+                  <!-- 미션 선언 -->
+                  <div class="bg-gradient-to-r from-red-50 to-pink-50 rounded-lg p-6 border-l-4 border-primary">
+                    <div class="flex items-center mb-3">
+                      <span class="text-2xl mr-3">🎯</span>
+                      <h4 class="text-xl font-bold text-gray-800">이런 분들께 추천드립니다!</h4>
+                    </div>
+                    <p class="text-gray-700 text-lg leading-relaxed">
+                      <strong class="bg-primary text-white px-2 py-1 rounded">1인/투잡 셀러</strong>
+                    </p>
+                  </div>
+
+                  <!-- 해결책 제시 -->
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-blue-50 rounded-lg p-5 border border-blue-200">
+                      <div class="flex items-center mb-3">
+                        <span class="text-xl mr-2">🔥</span>
+                        <h5 class="font-bold text-blue-800">최적 단가 보장</h5>
+                      </div>
+                      <p class="text-gray-700 text-sm leading-relaxed">
+                        수년간의 노하우와 네트워크로<br>
+                        <strong class="text-blue-600">소량 사입에도 대형 셀러 못지않은<br>최적의 단가</strong>를 제공합니다
+                      </p>
+                    </div>
+                    
+                    <div class="bg-green-50 rounded-lg p-5 border border-green-200">
+                      <div class="flex items-center mb-3">
+                        <span class="text-xl mr-2">📈</span>
+                        <h5 class="font-bold text-green-800">마진 & 경쟁력</h5>
+                      </div>
+                      <p class="text-gray-700 text-sm leading-relaxed">
+                        <strong class="text-green-600">마진율을 확실히 보장</strong>하고<br>
+                        시장에서 <strong class="text-green-600">가격 경쟁력</strong>을<br>
+                        갖도록 돕습니다
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- 강조 메시지 -->
+                  <div class="bg-gradient-to-r from-yellow-400 to-orange-400 text-white rounded-xl p-6 text-center shadow-lg">
+                    <div class="flex items-center justify-center mb-2">
+                      <span class="text-2xl mr-2">⚡</span>
+                      <p class="text-lg font-bold">
+                        대형 셀러와 동등한 조건, 소형 셀러의 유연함까지!
+                      </p>
+                      <span class="text-2xl ml-2">⚡</span>
+                    </div>
+                    <p class="text-sm opacity-90">
+                      이제 규모 때문에 포기할 필요 없습니다
+                    </p>
+                  </div>
+                </div>
+                
+                <div class="bg-secondary/20 p-6 rounded-lg text-center">
+                  <p class="text-gray-800 font-semibold text-lg">
+                    이제 더 이상 외로운 싸움은 그만!<br>
+                    부족했던 시간과 자원 허쉬를 활용하여, 저희와 함께 <strong class="text-primary">지속 가능한 성장</strong>을 경험하세요!
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <h3 class="text-2xl font-bold mb-4 text-gray-800" data-aos="fade-up" data-aos-delay="300">
+              왜 HUSH 로켓그로스 서비스를 이용해야하나요?
+            </h3>
+            <p class="text-gray-600 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="400">
+              HUSH는 소형/투잡 셀러를 위한 최적의 파트너입니다. 정직한
+              가격과 빠른 서비스로 여러분의 비즈니스를 성장시켜 드립니다.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-lg shadow-md feature-card" data-aos="fade-up" data-aos-delay="100">
+              <div
+                class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4"
+              >
+                <div
+                  class="w-6 h-6 flex items-center justify-center text-gray-800"
+                >
+                  <i class="ri-money-dollar-circle-line ri-lg"></i>
+                </div>
+              </div>
+              <h3 class="text-xl font-semibold mb-3 text-gray-800">💎 투명한 가격 정책</h3>
+              <p class="text-gray-600 leading-relaxed">
+                숨겨진 비용은 <span class="font-medium text-gray-700">절대 없습니다</span>. 
+                오직 <span class="text-primary font-medium">정직한 가격</span>으로, 
+                물량에 따라 더욱 <span class="font-medium">합리적인 가격</span>을 제안해 드려요.
+              </p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md feature-card" data-aos="fade-up" data-aos-delay="200">
+              <div
+                class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4"
+              >
+                <div
+                  class="w-6 h-6 flex items-center justify-center text-gray-800"
+                >
+                  <i class="ri-time-line ri-lg"></i>
+                </div>
+              </div>
+              <h3 class="text-xl font-semibold mb-3 text-gray-800">⚡ 100% 당일 출고</h3>
+              <p class="text-gray-600 leading-relaxed">
+                오전에 접수된 주문은 <span class="font-medium text-gray-700">무조건 당일 출고</span>해드려요! 
+                빠른 처리로 여러분의 비즈니스 <span class="text-primary font-medium">속도를 훨씬 높여</span>드립니다.
+              </p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md feature-card" data-aos="fade-up" data-aos-delay="300">
+              <div
+                class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4"
+              >
+                <div
+                  class="w-6 h-6 flex items-center justify-center text-gray-800"
+                >
+                  <i class="ri-customer-service-2-line ri-lg"></i>
+                </div>
+              </div>
+              <h3 class="text-xl font-semibold mb-3 text-gray-800">🚀 빠른 CS 처리</h3>
+              <p class="text-gray-600 leading-relaxed">
+                문의사항이나 요청사항에 <span class="font-medium text-gray-700">바로바로 대응</span>해드려요. 
+                전문 CS팀이 여러분의 문제를 <span class="text-primary font-medium">신속하고 정확하게</span> 해결해 드립니다.
+              </p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md feature-card" data-aos="fade-up" data-aos-delay="400">
+              <div
+                class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4"
+              >
+                <div
+                  class="w-6 h-6 flex items-center justify-center text-gray-800"
+                >
+                  <i class="ri-shield-check-line ri-lg"></i>
+                </div>
+              </div>
+              <h3 class="text-xl font-semibold mb-3 text-gray-800">🛡️ 쿠팡 인증 파트너</h3>
+              <p class="text-gray-600 leading-relaxed">
+                쿠팡 로켓그로스 기준을 <span class="font-medium text-gray-700">완벽히 숙지</span>하고 있어요. 
+                <span class="text-primary font-medium">안전하고 신뢰할 수 있는</span> 서비스로 
+                여러분께 <span class="font-medium">안심</span>을 드립니다.
+              </p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md feature-card" data-aos="fade-up" data-aos-delay="500">
+              <div
+                class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4"
+              >
+                <div
+                  class="w-6 h-6 flex items-center justify-center text-gray-800"
+                >
+                  <i class="ri-bar-chart-grouped-line ri-lg"></i>
+                </div>
+              </div>
+              <h3 class="text-xl font-semibold mb-3 text-gray-800">📊 데이터 기반 리포트</h3>
+              <p class="text-gray-600 leading-relaxed">
+                물량, 처리 시간, 비용 등을 <span class="font-medium text-gray-700">꼼꼼히 분석한 리포트</span>를 제공해요. 
+                데이터를 통해 여러분의 <span class="text-primary font-medium">현명한 비즈니스 의사결정</span>을 도와드립니다.
+              </p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md feature-card" data-aos="fade-up" data-aos-delay="600">
+              <div
+                class="w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4"
+              >
+                <div
+                  class="w-6 h-6 flex items-center justify-center text-gray-800"
+                >
+                  <i class="ri-user-settings-line ri-lg"></i>
+                </div>
+              </div>
+              <h3 class="text-xl font-bold mb-2">맞춤형 서비스</h3>
+              <p class="text-gray-600">
+                각 비즈니스의 특성과 요구사항에 맞는 맞춤형 서비스를 제공합니다.
+                여러분의 비즈니스에 최적화된 솔루션을 제안합니다.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 왜 HUSH를 이용해야할까 섹션 -->
+      <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12" data-aos="fade-up">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6" data-aos="fade-up" data-aos-delay="100">
+              작은 물량 때문에 해외 배송대행지에서 <br class="hidden sm:block">
+              <span class="text-primary">서러웠던 적 있나요?</span> 🥺
+            </h2>
+            <p class="text-xl text-gray-700 mb-4" data-aos="fade-up" data-aos-delay="200">
+              이제 로켓그로스에서 해답을 찾으세요!
+            </p>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed" data-aos="fade-up" data-aos-delay="300">
+              대형 셀러 틈바구니 속에서 <strong class="text-primary">생존 경쟁력</strong>, 
+              로켓그로스의 <strong class="text-primary">혁신적인 포장 및 배송비</strong>가 보장합니다. 
+              물량 걱정 없이 오직 성장에만 집중하세요.
+            </p>
+          </div>
+
+          <!-- 메인 특징 카드들 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <!-- 소규모이지만 가격경쟁력 -->
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-xl shadow-lg feature-card" data-aos="fade-up" data-aos-delay="100">
+              <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i class="ri-medal-line ri-2x text-white" aria-hidden="true"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">💪 작지만 강합니다!</h3>
+              </div>
+              <p class="text-gray-700 text-center leading-relaxed">
+                저희는 타업체보다 <strong class="text-blue-600">작은 규모</strong>이지만<br>
+                그만큼 <strong class="text-blue-600">가격 경쟁력</strong>에서 자신 있습니다!
+              </p>
+            </div>
+
+            <!-- 원활한 소통 -->
+            <div class="bg-gradient-to-br from-green-50 to-green-100 p-8 rounded-xl shadow-lg feature-card" data-aos="fade-up" data-aos-delay="200">
+              <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i class="ri-chat-smile-line ri-2x text-white" aria-hidden="true"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">💬 소통의 달인</h3>
+              </div>
+              <p class="text-gray-700 text-center leading-relaxed">
+                해외 및 국내 어느 업체보다 <strong class="text-green-600">원활한 소통</strong>으로<br>
+                <strong class="text-green-600">단 하나의 물건</strong>이라도 소중히 진행합니다
+              </p>
+            </div>
+
+            <!-- 자체배송 -->
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-8 rounded-xl shadow-lg feature-card" data-aos="fade-up" data-aos-delay="300">
+              <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <i class="ri-truck-line ri-2x text-white" aria-hidden="true"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">🚛 최저 배송비 보장</h3>
+              </div>
+              <p class="text-gray-700 text-center leading-relaxed">
+                <strong class="text-purple-600">부산물류센터</strong>에서 <strong class="text-purple-600">1톤 탑차</strong>로<br>
+                자체배송하여 최저 배송비를 보장합니다
+              </p>
+              <p class="text-xs text-gray-500 text-center mt-2">
+                *타지역 물류센터 입고희망시 일반택배비 적용
+              </p>
+            </div>
+          </div>
+
+          <!-- 추가 서비스 섹션 -->
+          <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-8 mb-8" data-aos="fade-up" data-aos-delay="400">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                  <span class="text-2xl mr-2">📦</span>
+                  소형셀러 맞춤 서비스
+                </h3>
+                <div class="space-y-3">
+                  <div class="flex items-start">
+                    <i class="ri-check-double-line text-orange-500 text-xl mt-1 mr-3" aria-hidden="true"></i>
+                    <p class="text-gray-700">
+                      <strong>작은 물건이라면</strong> 일시적 보관 및 출고까지<br>
+                      소형셀러분을 위한 준비를 해드립니다
+                    </p>
+                  </div>
+                  <div class="flex items-start">
+                    <i class="ri-check-double-line text-orange-500 text-xl mt-1 mr-3" aria-hidden="true"></i>
+                    <p class="text-gray-700">
+                      허쉬에서는 <strong>적극적인 소통</strong>으로<br>
+                      해외업체와도 원활한 배송이 가능합니다
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="text-center">
+                <div class="bg-white rounded-xl p-6 shadow-md border-2 border-orange-200 hover:border-orange-400 transition-all">
+                  <div class="text-6xl mb-4">🎯</div>
+                  <h4 class="text-xl font-bold text-gray-800 mb-3 bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">소형셀러 전용</h4>
+                  <div class="bg-orange-50 rounded-lg p-3">
+                    <p class="text-gray-800 font-semibold text-sm">
+                      <span class="text-orange-600 font-bold">소량주문도</span><br>
+                      <span class="text-lg"> 정성스럽게 처리합니다 ❤️</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 복잡함 제거 섹션 -->
+          <div class="bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl p-8" data-aos="fade-up" data-aos-delay="500">
+            <div class="text-center">
+              <h3 class="text-2xl font-bold text-gray-800 mb-6 flex items-center justify-center">
+                <span class="text-2xl mr-2">✂️</span>
+                복잡함은 모두 잘라냈습니다!
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                  <div class="text-red-500 text-3xl mb-3">❌</div>
+                  <h4 class="font-bold text-gray-800 mb-2">이제 안녕!</h4>
+                  <ul class="text-gray-600 text-sm space-y-1">
+                    <li>• 복잡한 견적서</li>
+                    <li>• 필요없는 재고 프로그램</li>
+                    <li>• 비싼 프로그램 사용료</li>
+                  </ul>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow-md">
+                  <div class="text-green-500 text-3xl mb-3">✅</div>
+                  <h4 class="font-bold text-gray-800 mb-2">이제 이것만!</h4>
+                  <ul class="text-gray-600 text-sm space-y-1">
+                    <li>• 간단한 주문</li>
+                    <li>• 투명한 가격</li>
+                    <li>• 빠른 처리</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="mt-6 bg-white rounded-xl p-6 shadow-lg border-2 border-yellow-200">
+                <div class="text-center">
+                  <div class="text-4xl mb-3">💰</div>
+                  <p class="text-xl font-bold text-gray-800 mb-2">
+                    <span class="bg-gradient-to-r from-red-500 to-pink-500 bg-clip-text text-transparent text-2xl line-through">WMS 프로그램 사용료</span>
+                  </p>
+                  <div class="bg-gradient-to-r from-green-400 to-blue-500 text-white rounded-lg p-4">
+                    <p class="text-lg font-bold">
+                      🎉 이제 그만 내셔도 됩니다! 🎉
+                    </p>
+                    <p class="text-sm mt-1 opacity-90">
+                      복잡한 프로그램 없이 간단하게!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTA 버튼 -->
+          <div class="text-center mt-12" data-aos="fade-up" data-aos-delay="600">
+                          <button
+                id="quote-modal-trigger"
+                class="inline-block bg-primary text-white px-10 py-4 !rounded-button font-bold text-lg hover:bg-opacity-90 transition-all whitespace-nowrap shadow-lg cta-button-primary"
+              >
+                <span class="flex items-center gap-2">
+                  <i class="ri-file-text-line ri-lg" aria-hidden="true"></i>
+                  HUSH 맞춤 견적서 보러가기!
+                </span>
+              </button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- FAQ 섹션 -->
+      <section id="faq" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+          <div class="text-center mb-12" data-aos="fade-up">
+            <h2 class="text-3xl font-bold mb-4" data-aos="fade-up" data-aos-delay="100">자주 묻는 질문</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto" data-aos="fade-up" data-aos-delay="200">
+              HUSH 로켓그로스 서비스에 대해 자주 묻는 질문들을 모았습니다.
+            </p>
+          </div>
+          <div id="static-faq-container" class="max-w-3xl mx-auto" data-aos="fade-up" data-aos-delay="300">
+            <!-- Static FAQ items will be dynamically inserted here by main.js -->
+          </div>
+        </div>
+      </section>
+      <!-- 견적 문의 섹션 -->
+      <section id="contact" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+          <div
+            class="max-w-4xl mx-auto bg-gray-50 rounded-lg overflow-hidden shadow-lg"
+            data-aos="fade-up"
+            data-aos-duration="800"
+          >
+            <div class="grid grid-cols-1 md:grid-cols-2">
+              <div class="p-8 bg-primary" data-aos="fade-right" data-aos-delay="200">
+                <h2 class="text-3xl font-bold text-white mb-4" data-aos="fade-up" data-aos-delay="400">견적 문의하기</h2>
+                <p class="text-white mb-6" data-aos="fade-up" data-aos-delay="600">
+                  HUSH 로켓그로스 서비스에 관심을 가져주셔서 감사합니다. 아래
+                  양식을 작성하시면 빠르게 연락드리겠습니다.
+                </p>
+                <div class="space-y-4" data-aos="fade-up" data-aos-delay="800">
+                  <div class="flex items-center" data-aos="fade-left" data-aos-delay="900">
+                    <div
+                      class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-3"
+                    >
+                      <div
+                        class="w-5 h-5 flex items-center justify-center text-white"
+                        aria-hidden="true"
+                      >
+                        <i class="ri-check-line"></i>
+                      </div>
+                    </div>
+                    <span class="text-white">숨겨진 요금 없는 정직한 가격</span>
+                  </div>
+                  <div class="flex items-center" data-aos="fade-left" data-aos-delay="1000">
+                    <div
+                      class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-3"
+                    >
+                      <div
+                        class="w-5 h-5 flex items-center justify-center text-white"
+                        aria-hidden="true"
+                      >
+                        <i class="ri-check-line"></i>
+                      </div>
+                    </div>
+                    <span class="text-white">100% 당일 출고 보장</span>
+                  </div>
+                  <div class="flex items-center" data-aos="fade-left" data-aos-delay="1100">
+                    <div
+                      class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-3"
+                    >
+                      <div
+                        class="w-5 h-5 flex items-center justify-center text-white"
+                        aria-hidden="true"
+                      >
+                        <i class="ri-check-line"></i>
+                      </div>
+                    </div>
+                    <span class="text-white">빠른 CS 처리</span>
+                  </div>
+                  <div class="flex items-center" data-aos="fade-left" data-aos-delay="1200">
+                    <div
+                      class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center mr-3"
+                    >
+                      <div
+                        class="w-5 h-5 flex items-center justify-center text-white"
+                        aria-hidden="true"
+                      >
+                        <i class="ri-check-line"></i>
+                      </div>
+                    </div>
+                    <span class="text-white">맞춤형 서비스 제공</span>
+                  </div>
+                </div>
+              </div>
+              <div class="p-8" data-aos="fade-left" data-aos-delay="200">
+                <form id="quote-form" novalidate>
+                  <div class="mb-4">
+                    <label for="company" class="block text-gray-700 mb-2"
+                      >업체명</label
+                    >
+                    <input
+                      type="text"
+                      id="company"
+                      name="company"
+                      class="w-full px-4 py-2 border-none bg-white shadow-sm rounded focus:ring-2 focus:ring-primary focus:outline-none"
+                      required
+                      autocomplete="organization"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label for="name" class="block text-gray-700 mb-2"
+                      >담당자 이름</label
+                    >
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      class="w-full px-4 py-2 border-none bg-white shadow-sm rounded focus:ring-2 focus:ring-primary focus:outline-none"
+                      required
+                      autocomplete="name"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label for="phone" class="block text-gray-700 mb-2"
+                      >연락처</label
+                    >
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      class="w-full px-4 py-2 border-none bg-white shadow-sm rounded focus:ring-2 focus:ring-primary focus:outline-none"
+                      required
+                      autocomplete="tel"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label for="email" class="block text-gray-700 mb-2"
+                      >이메일</label
+                    >
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      class="w-full px-4 py-2 border-none bg-white shadow-sm rounded focus:ring-2 focus:ring-primary focus:outline-none"
+                      required
+                      autocomplete="email"
+                    />
+                  </div>
+                                  <div class="mb-4">
+                  <label class="block text-gray-700 mb-2">예상 월 물량</label>
+                  <div class="flex flex-wrap gap-3">
+                    <label class="flex items-center custom-radio">
+                      <input
+                        type="radio"
+                        name="volume"
+                        value="100미만"
+                        class="hidden"
+                      />
+                      <div
+                        class="w-5 h-5 border border-gray-300 rounded-full flex items-center justify-center mr-2"
+                      >
+                        <div
+                          class="w-3 h-3 rounded-full bg-primary hidden"
+                        ></div>
+                      </div>
+                      <span>100개 미만</span>
+                    </label>
+                    <label class="flex items-center custom-radio">
+                      <input
+                        type="radio"
+                        name="volume"
+                        value="100-500"
+                        class="hidden"
+                      />
+                      <div
+                        class="w-5 h-5 border border-gray-300 rounded-full flex items-center justify-center mr-2"
+                      >
+                        <div
+                          class="w-3 h-3 rounded-full bg-primary hidden"
+                        ></div>
+                      </div>
+                      <span>100-500개</span>
+                    </label>
+                    <label class="flex items-center custom-radio">
+                      <input
+                        type="radio"
+                        name="volume"
+                        value="500이상"
+                        class="hidden"
+                      />
+                      <div
+                        class="w-5 h-5 border border-gray-300 rounded-full flex items-center justify-center mr-2"
+                      >
+                        <div
+                          class="w-3 h-3 rounded-full bg-primary hidden"
+                        ></div>
+                      </div>
+                      <span>500개 이상</span>
+                    </label>
+                  </div>
+                </div>
+                                  <div class="mb-4">
+                  <label class="block text-gray-700 mb-2"
+                    >관심 서비스 (다중 선택 가능)</label
+                  >
+                  <div class="grid grid-cols-2 gap-3">
+                    <label class="flex items-center custom-checkbox">
+                      <input
+                        type="checkbox"
+                        name="services"
+                        value="바코드부착"
+                        class="hidden"
+                      />
+                      <div
+                        class="w-5 h-5 border border-gray-300 rounded flex items-center justify-center mr-2"
+                      >
+                        <div class="w-3 h-3 text-white hidden">
+                            <i class="ri-check-line ri-xs" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                      <span>바코드 부착</span>
+                    </label>
+                    <label class="flex items-center custom-checkbox">
+                      <input
+                        type="checkbox"
+                        name="services"
+                        value="포장"
+                        class="hidden"
+                      />
+                      <div
+                        class="w-5 h-5 border border-gray-300 rounded flex items-center justify-center mr-2"
+                      >
+                        <div class="w-3 h-3 text-white hidden">
+                            <i class="ri-check-line ri-xs" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                      <span>포장</span>
+                    </label>
+                    <label class="flex items-center custom-checkbox">
+                      <input
+                        type="checkbox"
+                        name="services"
+                        value="배송"
+                        class="hidden"
+                      />
+                      <div
+                        class="w-5 h-5 border border-gray-300 rounded flex items-center justify-center mr-2"
+                      >
+                        <div class="w-3 h-3 text-white hidden">
+                            <i class="ri-check-line ri-xs" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                      <span>배송</span>
+                    </label>
+                    <label class="flex items-center custom-checkbox">
+                      <input
+                        type="checkbox"
+                        name="services"
+                        value="입고"
+                        class="hidden"
+                      />
+                      <div
+                        class="w-5 h-5 border border-gray-300 rounded flex items-center justify-center mr-2"
+                      >
+                        <div class="w-3 h-3 text-white hidden">
+                            <i class="ri-check-line ri-xs" aria-hidden="true"></i>
+                        </div>
+                      </div>
+                      <span>입고</span>
+                    </label>
+                  </div>
+                </div>
+                  <div class="mb-6">
+                    <label for="message" class="block text-gray-700 mb-2"
+                      >기타 문의사항</label
+                    >
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows="3"
+                      class="w-full px-4 py-2 border-none bg-white shadow-sm rounded focus:ring-2 focus:ring-primary focus:outline-none"
+                      aria-label="기타 문의사항"
+                    ></textarea>
+                  </div>
+                  <button
+                    type="submit"
+                    class="w-full bg-primary text-white py-3 !rounded-button font-medium hover:bg-opacity-90 transition-all whitespace-nowrap"
+                  >
+                    견적 요청하기
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <!-- 푸터 -->
+    <footer class="bg-gray-800 text-white py-12">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div data-aos="fade-up" data-aos-delay="100">
+            <div class="text-2xl font-['Pacifico'] text-white mb-4">hush</div>
+            <p class="text-gray-400 mb-4">
+              HUSH는 쿠팡 로켓그로스 입점을 위한 최적의 파트너입니다. 정직한
+              가격과 빠른 서비스로 여러분의 비즈니스를 성장시켜 드립니다.
+            </p>
+            <div class="flex space-x-4">
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors"
+                aria-label="Instagram"
+              >
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-instagram-line ri-lg" aria-hidden="true"></i>
+                </div>
+              </a>
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors"
+                aria-label="Facebook"
+              >
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-facebook-line ri-lg" aria-hidden="true"></i>
+                </div>
+              </a>
+              <a
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors"
+                aria-label="KakaoTalk"
+              >
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-kakao-talk-line ri-lg" aria-hidden="true"></i>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div data-aos="fade-up" data-aos-delay="200">
+            <h3 class="text-lg font-bold mb-4">서비스 약속</h3>
+            <div class="p-4 bg-gray-700 rounded-lg">
+              <ul class="text-gray-300 space-y-3">
+                <li class="flex items-start">
+                  <i class="ri-check-double-line text-secondary text-lg mt-1 mr-3" aria-hidden="true"></i>
+                  <span class="text-sm">입고와 동시에 작업 진행하며 모든과정 소통</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="ri-check-double-line text-secondary text-lg mt-1 mr-3" aria-hidden="true"></i>
+                  <span class="text-sm">입고일로 부터 2일내 물류센터 100% 배송완료</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="ri-check-double-line text-secondary text-lg mt-1 mr-3" aria-hidden="true"></i>
+                  <span class="text-sm">모든과정을 고객님과 함께 하겠습니다</span>
+                </li>
+              </ul>
+            </div>
+            <div class="mt-4">
+              <a
+                href="#"
+                id="faq-modal-trigger"
+                class="text-gray-400 hover:text-white transition-colors flex items-center"
+              >
+                <i class="ri-question-line mr-2" aria-hidden="true"></i>
+                자주 묻는 질문
+              </a>
+            </div>
+          </div>
+          <div data-aos="fade-up" data-aos-delay="400">
+            <h3 class="text-lg font-bold mb-4">연락처</h3>
+            <div class="bg-gray-700 rounded-lg p-4 mb-4">
+              <div class="text-white font-bold text-lg mb-2">허인성</div>
+              <div class="text-gray-300 text-sm mb-3">허쉬(HUSH) │ 운영관리부 │ <span class="font-semibold">대 표</span></div>
+            </div>
+            <ul class="space-y-2">
+              <li class="flex items-start">
+                <div
+                  class="w-5 h-5 flex items-center justify-center text-gray-400 mr-2 mt-0.5"
+                  aria-hidden="true"
+                >
+                  <i class="ri-smartphone-line"></i>
+                </div>
+                <div class="text-gray-400">
+                  <div>M. 010-9481-5940</div>
+                  <div>T. 010-3623-5940</div>
+                </div>
+              </li>
+              <li class="flex items-start">
+                <div
+                  class="w-5 h-5 flex items-center justify-center text-gray-400 mr-2 mt-0.5"
+                  aria-hidden="true"
+                >
+                  <i class="ri-mail-line"></i>
+                </div>
+                <span class="text-gray-400">imim2000@nate.com</span>
+              </li>
+              <li class="flex items-start">
+                <div
+                  class="w-5 h-5 flex items-center justify-center text-gray-400 mr-2 mt-0.5"
+                  aria-hidden="true"
+                >
+                  <i class="ri-map-pin-line"></i>
+                </div>
+                <span class="text-gray-400">부산광역시 영도구 동삼로 34</span>
+              </li>
+              <li class="flex items-start">
+                <div
+                  class="w-5 h-5 flex items-center justify-center text-gray-400 mr-2 mt-0.5"
+                  aria-hidden="true"
+                >
+                  <i class="ri-time-line"></i>
+                </div>
+                <div class="text-gray-400">
+                  <div>운영시간 09:00~18:00</div>
+                  <div class="text-sm">(주말 및 공휴일 휴무)</div>
+                  <div class="text-sm">*사전협의시 주말및 공휴일 운영</div>
+                </div>
+              </li>
+            </ul>
+
+          </div>
+        </div>
+        <div
+          class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400"
+        >
+          <p>&copy; 2025 HUSH Logistics. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+    <!-- FAQ Modal -->
+    <div
+      id="faq-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="faq-modal-title"
+    >
+      <div class="fixed inset-0 flex items-center justify-center p-4">
+        <div
+          class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-xl"
+        >
+          <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+              <h3 id="faq-modal-title" class="text-2xl font-bold">
+                자주 묻는 질문
+              </h3>
+              <button
+                id="faq-modal-close"
+                class="text-gray-400 hover:text-gray-500"
+                aria-label="Close FAQ modal"
+              >
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-close-line ri-lg" aria-hidden="true"></i>
+                </div>
+              </button>
+            </div>
+            <div class="relative mt-4">
+              <input
+                type="text"
+                id="faq-search"
+                placeholder="질문 검색하기"
+                class="w-full px-4 py-2 pr-10 border-none bg-gray-50 shadow-sm rounded focus:ring-2 focus:ring-primary focus:outline-none text-sm"
+                aria-label="Search frequently asked questions"
+              />
+              <div
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                aria-hidden="true"
+              >
+                <i class="ri-search-line"></i>
+              </div>
+            </div>
+          </div>
+          <div class="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+            <div id="faq-list" class="space-y-4">
+              <!-- FAQ items will be dynamically inserted here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quote Modal -->
+    <div
+      id="quote-modal"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="quote-modal-title"
+    >
+      <div class="fixed inset-0 flex items-center justify-center p-4">
+        <div
+          class="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden shadow-xl"
+        >
+          <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+              <h3 id="quote-modal-title" class="text-2xl font-bold text-primary">
+                HUSH 맞춤 견적서
+              </h3>
+              <button
+                id="quote-modal-close"
+                class="text-gray-400 hover:text-gray-500"
+                aria-label="Close quote modal"
+              >
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <i class="ri-close-line ri-lg" aria-hidden="true"></i>
+                </div>
+              </button>
+            </div>
+            <div class="mt-2">
+              <p class="text-gray-600">일반적인 소형상품 기준 견적서입니다. 부피 및 무게에 따라 차등 적용될 수 있습니다.</p>
+              <p class="text-sm text-red-600 font-medium mt-1">※ VAT 별도</p>
+            </div>
+          </div>
+          
+          <div class="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
+            <!-- 기본 서비스 테이블 -->
+            <div class="mb-8">
+              <h4 class="text-lg font-bold mb-4 text-gray-800">🔧 기본 서비스</h4>
+              <div class="overflow-x-auto">
+                <table class="w-full border-collapse border border-gray-300 text-sm">
+                  <thead>
+                    <tr class="bg-gray-50">
+                      <th class="border border-gray-300 px-4 py-3 text-left font-semibold">구분</th>
+                      <th class="border border-gray-300 px-4 py-3 text-left font-semibold">단위</th>
+                      <th class="border border-gray-300 px-4 py-3 text-right font-semibold">단가(원)</th>
+                      <th class="border border-gray-300 px-4 py-3 text-left font-semibold">비고</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="border border-gray-300 px-4 py-3 font-medium">상·하차</td>
+                      <td class="border border-gray-300 px-4 py-3">EA</td>
+                      <td class="border border-gray-300 px-4 py-3 text-right">150</td>
+                      <td class="border border-gray-300 px-4 py-3">무게 10kg 내외 수작업<br>(가장 긴 변이 100cm 초과 X)<br>이형은 협의</td>
+                    </tr>
+                    <tr class="bg-gray-25">
+                      <td class="border border-gray-300 px-4 py-3 font-medium">유통 및 가공</td>
+                      <td class="border border-gray-300 px-4 py-3">EA</td>
+                      <td class="border border-gray-300 px-4 py-3 text-right">200</td>
+                      <td class="border border-gray-300 px-4 py-3">바코드 제외 스티커 부착 협의</td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-300 px-4 py-3 font-medium">바코드 출력·부착</td>
+                      <td class="border border-gray-300 px-4 py-3">EA</td>
+                      <td class="border border-gray-300 px-4 py-3 text-right">300</td>
+                      <td class="border border-gray-300 px-4 py-3">-</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 포장 서비스 테이블 -->
+            <div class="mb-8">
+              <h4 class="text-lg font-bold mb-4 text-gray-800">📦 포장 서비스</h4>
+              <div class="overflow-x-auto">
+                <table class="w-full border-collapse border border-gray-300 text-sm">
+                  <thead>
+                    <tr class="bg-gray-50">
+                      <th class="border border-gray-300 px-4 py-3 text-left font-semibold">구분</th>
+                      <th class="border border-gray-300 px-4 py-3 text-left font-semibold">단위</th>
+                      <th class="border border-gray-300 px-4 py-3 text-right font-semibold">단가(원)</th>
+                      <th class="border border-gray-300 px-4 py-3 text-left font-semibold">비고</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="border border-gray-300 px-4 py-3 font-medium">개별포장 (OPP)</td>
+                      <td class="border border-gray-300 px-4 py-3">EA</td>
+                      <td class="border border-gray-300 px-4 py-3 text-right">-</td>
+                      <td class="border border-gray-300 px-4 py-3">단순 비닐포장</td>
+                    </tr>
+                    <tr class="bg-gray-25">
+                      <td class="border border-gray-300 px-4 py-3 font-medium">에어캡 포장 (뽁뽁이)</td>
+                      <td class="border border-gray-300 px-4 py-3">EA</td>
+                      <td class="border border-gray-300 px-4 py-3 text-right">-</td>
+                      <td class="border border-gray-300 px-4 py-3">협의</td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-300 px-4 py-3 font-medium">입고 BOX 포장 및 출력물 동봉</td>
+                      <td class="border border-gray-300 px-4 py-3">BOX</td>
+                      <td class="border border-gray-300 px-4 py-3 text-right">600</td>
+                      <td class="border border-gray-300 px-4 py-3">기타 특수포장</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 배송 서비스 테이블 -->
+            <div class="mb-8">
+              <h4 class="text-lg font-bold mb-4 text-gray-800">🚛 배송 및 물류센터 입고</h4>
+              <div class="overflow-x-auto">
+                <table class="w-full border-collapse border border-gray-300 text-sm">
+                  <thead>
+                    <tr class="bg-gray-50">
+                      <th class="border border-gray-300 px-4 py-3 text-left font-semibold">구분</th>
+                      <th class="border border-gray-300 px-4 py-3 text-left font-semibold">규격</th>
+                      <th class="border border-gray-300 px-4 py-3 text-right font-semibold">단가(원)</th>
+                      <th class="border border-gray-300 px-4 py-3 text-left font-semibold">비고</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="border border-gray-300 px-4 py-3 font-medium" rowspan="4">로켓그로스 입고<br>(자체배송)</td>
+                      <td class="border border-gray-300 px-4 py-3">80cm / 2kg</td>
+                      <td class="border border-gray-300 px-4 py-3 text-right font-bold text-primary">2,000</td>
+                      <td class="border border-gray-300 px-4 py-3" rowspan="4">SKU별 BOX 사용<br>(로켓그로스 입고기준)<br>그 외 이형협의<br><br>타지역 물류센터 입고 희망시<br>일반택배비용 청구</td>
+                    </tr>
+                    <tr class="bg-gray-25">
+                      <td class="border border-gray-300 px-4 py-3">100cm / 5kg</td>
+                      <td class="border border-gray-300 px-4 py-3 text-right font-bold text-primary">3,000</td>
+                    </tr>
+                    <tr>
+                      <td class="border border-gray-300 px-4 py-3">120cm / 10kg</td>
+                      <td class="border border-gray-300 px-4 py-3 text-right font-bold text-primary">4,000</td>
+                    </tr>
+                    <tr class="bg-gray-25">
+                      <td class="border border-gray-300 px-4 py-3">140cm / 15kg</td>
+                      <td class="border border-gray-300 px-4 py-3 text-right font-bold text-primary">5,000</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 보관 서비스 테이블 -->
+            <div class="mb-8">
+              <h4 class="text-lg font-bold mb-4 text-gray-800">📋 보관 및 재출고</h4>
+              <div class="overflow-x-auto">
+                <table class="w-full border-collapse border border-gray-300 text-sm">
+                  <thead>
+                    <tr class="bg-gray-50">
+                      <th class="border border-gray-300 px-4 py-3 text-left font-semibold">구분</th>
+                      <th class="border border-gray-300 px-4 py-3 text-left font-semibold">단위</th>
+                      <th class="border border-gray-300 px-4 py-3 text-right font-semibold">단가(원)</th>
+                      <th class="border border-gray-300 px-4 py-3 text-left font-semibold">비고</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="border border-gray-300 px-4 py-3 font-medium">보관 및 재출고</td>
+                      <td class="border border-gray-300 px-4 py-3">일별 BOX/SKU</td>
+                      <td class="border border-gray-300 px-4 py-3 text-right">200</td>
+                      <td class="border border-gray-300 px-4 py-3">소형 물품에 한해 한시적 운영<br>(추후 정식 운영 예정)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- 주요 공지사항 -->
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <i class="ri-information-line ri-lg text-yellow-600" aria-hidden="true"></i>
+                </div>
+                <div class="ml-3">
+                  <p class="text-sm text-yellow-800">
+                    <strong>중요 안내:</strong> 쿠팡 물류센터 입고기준이 팔레트 입고방식이라 <strong>10 BOX 이하는 일반택배로 배송</strong>될 수 있음을 알려드립니다.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 문의 버튼 -->
+            <div class="text-center">
+              <a
+                href="#contact"
+                id="quote-to-contact"
+                class="inline-block bg-primary text-white px-8 py-3 !rounded-button font-bold text-lg hover:bg-opacity-90 transition-all whitespace-nowrap shadow-lg"
+              >
+                <span class="flex items-center gap-2">
+                  <i class="ri-phone-line ri-lg" aria-hidden="true"></i>
+                  맞춤 견적 문의하기
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/main.js" defer></script>
+  </body>
+</html>

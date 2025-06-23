@@ -1,0 +1,95 @@
+body {
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+}
+.hover-gradient-shadow {
+  transition: all 0.3s ease;
+}
+.hover-gradient-shadow:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 20px rgba(255, 30, 0, 0.1),
+    0 6px 6px rgba(249, 233, 0, 0.1),
+    0 0 100px rgba(255, 30, 0, 0.1);
+}
+.service-card {
+  transition: all 0.3s ease;
+}
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 15px 30px rgba(255, 30, 0, 0.1),
+    0 10px 10px rgba(249, 233, 0, 0.1);
+}
+.feature-card {
+  transition: all 0.3s ease;
+}
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 15px 30px rgba(255, 30, 0, 0.1),
+    0 10px 10px rgba(249, 233, 0, 0.1);
+}
+
+.cta-button-primary {
+  transition: all 0.3s ease;
+}
+.cta-button-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(255, 30, 0, 0.3);
+}
+.cta-button-secondary {
+  transition: all 0.3s ease;
+}
+.cta-button-secondary:hover {
+  transform: scale(1.02);
+}
+.faq-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+}
+.faq-content.show {
+  max-height: 500px;
+  transition: max-height 0.4s ease-in, padding 0.4s ease-in;
+}
+.hero-section {
+  background-color: #f9e900;
+}
+.price-text {
+  color: #ff1e00;
+}
+.form-input:focus {
+  outline: none;
+  border-color: #ff1e00;
+}
+/* 커스텀 체크박스 및 라디오 버튼 스타일 */
+.custom-checkbox {
+  cursor: pointer;
+}
+.custom-checkbox input:checked + .w-5 {
+  background-color: #ff1e00 !important;
+  border-color: #ff1e00 !important;
+}
+.custom-checkbox input:checked + .w-5 .w-3 {
+  display: block !important;
+}
+
+.custom-radio {
+  cursor: pointer;
+}
+.custom-radio input:checked + .w-5 {
+  border-color: #ff1e00 !important;
+}
+.custom-radio input:checked + .w-5 .w-3 {
+  display: block !important;
+}
+
+/* 호버 효과 추가 */
+.custom-checkbox:hover .w-5 {
+  border-color: #ff1e00;
+  transition: border-color 0.2s ease;
+}
+.custom-radio:hover .w-5 {
+  border-color: #ff1e00;
+  transition: border-color 0.2s ease;
+} 
